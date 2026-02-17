@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Dependencies: curl tar gzip grep coreutils zstd sed
+# Dependencies: curl tar gzip grep coreutils
 # Root rights are required
 source settings.sh
 
@@ -265,6 +265,13 @@ export -f generate_pkg_licenses_file
 run_in_chroot bash -c generate_pkg_licenses_file
 
 sed -i 's/DownloadUser = alpm/#DownloadUser = alpm/' "${bootstrap}"/etc/pacman.conf
+
+###################################################
+# Try to fix GTK/GDK error messages
+# code for Ivan write
+cp "${bootstrap}"/usr/lib/gtk-3.0/3.0.0/immodules/im-ibus.so "${bootstrap}"/usr/lib/
+cp "${bootstrap}"/usr/lib/gdk-pixbuf-2.0/2.10.0/loaders/* "${bootstrap}"/usr/lib/
+###################################################
 
 unmount_chroot
 
