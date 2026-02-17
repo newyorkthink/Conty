@@ -5,59 +5,110 @@
 # Apart from packages from the official Arch repos, you can also specify
 # packages from the Chaotic-AUR repo
 PACKAGES=(
-	# audio
-	alsa-lib lib32-alsa-lib alsa-plugins lib32-alsa-plugins libpulse
-	lib32-libpulse alsa-tools alsa-utils pipewire lib32-pipewire pipewire-pulse
-	pipewire-jack lib32-pipewire-jack sndio lib32-sndio
-	# core
-	xorg-xwayland qt6-wayland wayland lib32-wayland qt5-wayland xorg-server-xephyr gamescope
-	# video
-	mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon
-	vulkan-intel lib32-vulkan-intel
-	vulkan-icd-loader lib32-vulkan-icd-loader vulkan-mesa-layers
-	lib32-vulkan-mesa-layers libva-intel-driver lib32-libva-intel-driver
-	intel-media-driver mesa-utils vulkan-tools libva-utils lib32-mesa-utils
-	# wine
-	wine-staging winetricks-git wine-nine wineasio
-	freetype2 lib32-freetype2 libxft lib32-libxft
-	flex lib32-flex fluidsynth lib32-fluidsynth
-	libxrandr lib32-libxrandr xorg-xrandr libldap lib32-libldap
-	mpg123 lib32-mpg123 libxcomposite lib32-libxcomposite
-	libxi lib32-libxi libxinerama lib32-libxinerama libxss lib32-libxss
-	libxslt lib32-libxslt openal lib32-openal
-	krb5 lib32-krb5 libpulse lib32-libpulse alsa-plugins
-	lib32-alsa-plugins alsa-lib lib32-alsa-lib gnutls lib32-gnutls
-	giflib lib32-giflib gst-libav gst-plugin-pipewire gst-plugins-ugly
-	gst-plugins-bad gst-plugins-bad-libs gst-plugin-va lsp-plugins-gst
-	gst-plugins-base-libs lib32-gst-plugins-base-libs gst-plugins-base lib32-gst-plugins-base
-	gst-plugins-good lib32-gst-plugins-good gstreamer lib32-gstreamer
-	libpng lib32-libpng v4l-utils lib32-v4l-utils
-	libgpg-error lib32-libgpg-error libjpeg-turbo lib32-libjpeg-turbo
-	libgcrypt lib32-libgcrypt ncurses lib32-ncurses ocl-icd lib32-ocl-icd
-	libxcrypt-compat lib32-libxcrypt-compat libva lib32-libva sqlite lib32-sqlite
-	gtk3 lib32-gtk3 vulkan-icd-loader lib32-vulkan-icd-loader
-	sdl2-compat lib32-sdl2-compat vkd3d lib32-vkd3d libgphoto2
-	libnm lib32-libnm
-	cabextract wget gamemode lib32-gamemode mangohud lib32-mangohud
-	# development
-	base-devel git meson mingw-w64-gcc cmake
-	# gaming
-	lutris python-protobuf steam steamtinkerlaunch
-	minigalaxy gamehub prismlauncher bottles playonlinux obs-studio
-	retroarch retroarch-assets-ozone libretro-beetle-psx-hw
-	libretro-blastem libretro-bsnes libretro-dolphin duckstation-gpl
-	libretro-gambatte libretro-melonds libretro-mgba libretro-nestopia
-	libretro-parallel-n64 libretro-picodrive libretro-ppsspp
-	libretro-yabause pcsx2-git lsfg-vk-git protonplus umu-launcher
-	# extra
-	nano ttf-dejavu ttf-liberation firefox mpv geany pcmanfm
-	htop qbittorrent speedcrunch gpicview file-roller openbox lxterminal
-	yt-dlp minizip nautilus genymotion jre17-openjdk gnome-themes-extra
- 	ffmpegthumbnailer tmux
+	# cli_download_tools
+	curl wget aria2 rsync	
+	# udisks2_tools
+	udiskie udisks2 udisks2-btrfs udisks2-lvm2 udisks2-qt5
+	# terminal_emulators
+	lxterminal rxvt-unicode xterm
+	# text_editors
+	vim mousepad
+	# pdf_utilities
+	evince
+	# shell_tools
+	zsh zsh-autosuggestions zsh-completions zsh-history-substring-search zsh-syntax-highlighting dash bash bash-completion
+	# compression_cli_tools
+	gzip bzip2 pbzip2 xz pixz zip unzip minizip zstd arj unarj lrzsz tar atool pax cpio
+	# gui_compression_tools
+	file-roller ark
+  # qt_dependencies
+  qt5ct qt5-base qt5-wayland qt5-tools qt5-declarative qt5-multimedia qt5-x11extras qt5-graphicaleffects qt5-imageformats qt5-location qt5-quickcontrols
+	qt5-quickcontrols2 qt5-svg kvantum kvantum-qt5 qt6ct qt6-base qt6-wayland qt6-tools qt6-declarative qt6-multimedia qt6-imageformats
+	# input_method_frameworks
+	fcitx5 fcitx5-anthy fcitx5-bamboo fcitx5-breeze fcitx5-chewing fcitx5-chinese-addons fcitx5-configtool fcitx5-gtk fcitx5-hangul fcitx5-kkc fcitx5-libthai fcitx5-lua
+	fcitx5-m17n fcitx5-material-color fcitx5-nord fcitx5-pinyin-zhwiki fcitx5-qt fcitx5-rime fcitx5-sayura fcitx5-skk fcitx5-table-extra fcitx5-table-other fcitx5-unikey libime
+	ibus ibus-anthy ibus-chewing ibus-hangul ibus-kkc ibus-libpinyin ibus-rime ibus-skk ibus-sunpinyin ibus-table ibus-table-chinese ibus-table-extraphrase ibus-typing-booster 
+	ibus-unikey rime-bopomofo rime-cangjie rime-double-pinyin rime-emoji rime-essay rime-loengfan rime-luna-pinyin rime-pinyin-simp rime-pinyin-zhwiki rime-prelude rime-quick 
+	rime-stroke rime-terra-pinyin rime-wubi rime-wugniu
+	# fonts_management_tools
+	fontconfig gnome-font-viewer freetype2
+	# common_fonts
+	ttf-dejavu ttf-droid ttf-dejavu-nerd ttf-liberation ttf-roboto-mono ttf-roboto-mono-nerd wqy-bitmapfont wqy-zenhei wqy-microhei noto-fonts noto-fonts-cjk noto-fonts-emoji
+	# desktop_themes
+	sound-theme-freedesktop gnome-themes-extra hicolor-icon-theme papirus-icon-theme adwaita-icon-theme adwaita-cursors materia-gtk-theme kvantum-theme-materia
+	# spellcheck_tools
+	enchant aspell hspell hunspell gspell codespell nuspell
+	# wayland_packages
+	wayland wayland-protocols wayland-utils xdg-desktop-portal xdg-desktop-portal-gtk
+	# xorg_packages
+	xorg-server xorg-server-common xorg-server-devel xorg-xinit xorg-xinput xorg-xwayland xorg-server-xephyr xorg-xrandr xorg-xset xorg-xprop xorg-font-util xorg-xkbcomp
+	# x11_core_libraries
+	libx11 libxslt libxext libxau libxdmcp libxkbcommon libxkbcommon-x11 libxcb libxi libxrandr libxinerama libxcomposite libsm libxrender libxfixes libxdamage libxft libxtst libxv
+	# multimedia_tools
+	mpv ffmpeg audacity qview feh nsxiv imagemagick gpicview v4l-utils gst-plugins-espeak
+	gstreamer gstreamer-vaapi gst-plugins-base gst-plugins-base-libs gst-plugins-good gst-plugins-bad gst-plugins-bad-libs gst-plugins-ugly gst-libav
+	# file_manager_tools
+	libfm-qt tumbler ffmpegthumbnailer libgepub libgsf libopenraw poppler poppler-glib nautilus nautilus-image-converter nautilus-python nautilus-share
+	# gvfs_packages
+	gvfs gvfs-afc gvfs-dnssd gvfs-goa gvfs-gphoto2 gvfs-mtp gvfs-nfs gvfs-smb gvfs-wsdd
+	# dbus_packages
+	dbus dbus-units dbus-glib xdg-dbus-proxy python-dbus
+	# python_dev_tools
+	python python-pip python-setuptools python-wheel python-virtualenv python-virtualenvwrapper ipython cython
+	# bluetooth_management_packages
+	bluez bluez-cups bluez-hid2hci bluez-libs bluez-mesh bluez-obex bluez-tools bluez-utils blueman
+	# gtk_packages
+	gtk3 gtk4 webkit2gtk webkit2gtk-4.1 glib2
+	# gnome_environment_tools
+	gnome-tweaks gnome-control-center gnome-system-monitor gnome-disk-utility baobab gnome-settings-daemon gnome-characters gnome-logs
+	# openbox_environment
+	openbox lxappearance libnotify libxft libvoikko at-spi2-core
+	# haskell_libraries
+	haskell-bzlib haskell-graphscc haskell-pandoc-lua-engine haskell-pandoc-lua-marshal haskell-alsa-core haskell-alsa-mixer
+	# graphics_drivers
+	mesa xf86-video-intel xf86-video-amdgpu xf86-video-vesa intel-media-driver libdrm libglvnd libepoxy
+	# vulkan_tools
+	vulkan-radeon vulkan-intel vulkan-icd-loader vulkan-mesa-layers vulkan-tools mangohud libvpl libvpl-tools openpgl
+	# utility_software_packages
+	dconf dconf-editor hplip meld psensor speedcrunch cheese qalculate-gtk kcolorchooser bleachbit peek flameshot shutter filezilla
+	# video_acceleration
+	libva libva-intel-driver vdpauinfo libvdpau libvdpau-va-gl
+	# debugging_tools
+	mesa-utils libva-utils
+	# network_manager
+	networkmanager network-manager-applet network-manager-sstp networkmanager-l2tp networkmanager-openconnect networkmanager-openvpn 
+	nm-cloud-setup networkmanager-qt5 networkmanager-strongswan networkmanager-vpnc nm-connection-editor
+	# multimedia_libs
+	libpng libjpeg-turbo giflib mpg123 libgphoto2
+	# alsa_packages
+	alsa-card-profiles alsa-lib alsa-oss alsa-plugins alsa-scarlett-gui alsa-tools alsa-topology-conf alsa-ucm-conf alsa-utils
+	# pulseaudio_packages
+	pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber pavucontrol pamixer pasystray libpulse easyeffects lsp-plugins
+	# audio_drivers_libraries
+	libldac sbc libfreeaptx openal libsndfile libsamplerate libcanberra libsoxr libasyncns libvorbis
+	# network_management_tools
+	net-tools traceroute iperf libnm dhclient wireless_tools wpa_supplicant iw iwd nethogs iftop hostapd bridge-utils ethtool dnsmasq inetutils netctl dhcpcd
+	# security_tools
+	openssh openssl lxqt-openssh-askpass openvpn iptables squid gnutls libldap qrencode haveged nmap tcpdump
+	# file_system_tools
+	attr cryptsetup smartmontools parted gparted lvm2 fsarchiver gsmartcontrol ntfs-3g exfatprogs jfsutils util-linux dosfstools e2fsprogs 
+	btrfs-progs xfsprogs cifs-utils mdadm
+	# network_file_systems
+	samba nfs-utils mkinitcpio-nfs-utils avahi sshfs
+	# cli_utilities
+	tmux screen bat bat-extras ripgrep fzf lsd shellcheck mcfly fd ncdu inxi jq lf tree which cmatrix usbutils pciutils less findutils psmisc procps-ng expect zoxide
+	# desktop_utilities
+	desktop-file-utils xdotool arandr xclip xsel xbindkeys numlockx zenity xdg-utils xdg-user-dirs dmenu rofi nwg-drawer dunst
+	# base_utilities
+	polkit expat filesystem coreutils shadow libffi libxml2 gettext ncurses file duktape cairo vorbis-tools libxcrypt-compat
+	# remote_utilities
+	remmina freerdp spice spice-vdagent spice-protocol spice-gtk libvncserver x11vnc wayvnc gtk-vnc kwallet5 libsecret virt-viewer
+	# cli_system_info_tools
+	clinfo hwinfo lshw lm_sensors chromium
 )
 
 # If you want to install AUR packages, specify them in this variable
-AUR_PACKAGES=(faugus-launcher-git)
+AUR_PACKAGES=()
 
 # ALHP is a repository containing packages from the official Arch Linux
 # repos recompiled with -O3, LTO and optimizations for modern CPUs for
@@ -106,22 +157,9 @@ LOCALES=(
 # Content of pacman mirrorrlist file before reflector is installed and used to fetch new one
 # shellcheck disable=2016
 MIRRORLIST='
-Server = https://mirror.osbeck.com/archlinux/$repo/os/$arch
-Server = https://london.mirror.pkgbuild.com/$repo/os/$arch
-Server = https://mirror.trap.moe/archlinux/$repo/os/$arch
-Server = https://archlinux.thaller.ws/$repo/os/$arch
-Server = https://de.arch.mirror.kescher.at/$repo/os/$arch
-Server = https://mirror.cyberbits.eu/archlinux/$repo/os/$arch
-Server = https://arch.jensgutermuth.de/$repo/os/$arch
-Server = https://fastly.mirror.pkgbuild.com/$repo/os/$arch
-Server = https://mirror.lcarilla.de/archlinux/$repo/os/$arch
-Server = https://mirror.moson.org/arch/$repo/os/$arch
-Server = https://arch.phinau.de/$repo/os/$arch
-Server = https://mirrors.atviras.lt/archlinux/$repo/os/$arch
-Server = https://ro.arch.niranjan.co/$repo/os/$arch
-Server = https://ams.nl.mirrors.bjg.at/arch/$repo/os/$arch
-Server = https://mirror.ubrco.de/archlinux/$repo/os/$arch
-Server = https://archlinux.uk.mirror.allworldit.com/archlinux/$repo/os/$arch
+Server = https://mirrors.tuna.tsinghua.edu.cn/archlinux/$repo/os/$arch
+Server = https://mirror.sjtu.edu.cn/archlinux/$repo/os/$arch
+Server = https://mirrors.ustc.edu.cn/archlinux/$repo/os/$arch
 '
 
 # Enable this variable to use the system-wide mksquashfs/mkdwarfs instead
@@ -140,7 +178,7 @@ SQUASHFS_COMPRESSOR_ARGUMENTS=(-b 1M -comp "${SQUASHFS_COMPRESSOR}" -Xcompressio
 #SQUASHFS_COMPRESSOR_ARGUMENTS=(-b 256K -comp "${SQUASHFS_COMPRESSOR}" -Xhc)
 
 # Set to any value to Use DwarFS instead of SquashFS
-USE_DWARFS=
+USE_DWARFS=1
 DWARFS_COMPRESSOR_ARGUMENTS=(
 	-l7 -C zstd:level=19 --metadata-compression null
 	-S 22 -B 1 --order nilsimsa
