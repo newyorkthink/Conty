@@ -226,6 +226,15 @@ mv -f _ "${bootstrap}"/etc/pacman.conf
 run_in_chroot pacman -Sy archlinux-keyring --noconfirm
 run_in_chroot pacman -Su --noconfirm
 
+# Add Arch Linux CN repo
+{
+	echo
+	echo "[archlinuxcn]"
+	echo 'Server = https://repo.archlinuxcn.org/$arch'
+} >> "${bootstrap}"/etc/pacman.conf
+
+run_in_chroot pacman -Sy archlinuxcn-keyring --noconfirm
+
 if [ -n "$ENABLE_ALHP_REPO" ]; then
 	run_in_chroot pacman --noconfirm --needed -S alhp-keyring alhp-mirrorlist
 	sed "s/#\[multilib\]/#/" "${bootstrap}"/etc/pacman.conf > _
@@ -285,6 +294,12 @@ run_in_chroot bash -c generate_pkg_licenses_file
 sed 's/DownloadUser = alpm/#DownloadUser = alpm/' "${bootstrap}"/etc/pacman.conf > _
 mv -f _ "${bootstrap}"/etc/pacman.conf
 
+###################################################
+# Try to fix GTK/GDK error messages
+# code for Ivan write
+cp "${bootstrap}"/usr/lib/gtk-3.0/3.0.0/immodules/im-ibus.so "${bootstrap}"/usr/lib/
+cp "${bootstrap}"/usr/lib/gdk-pixbuf-2.0/2.10.0/loaders/* "${bootstrap}"/usr/lib/
+###################################################
 
 unmount_chroot
 

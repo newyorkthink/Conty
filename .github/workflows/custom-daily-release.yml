@@ -16,6 +16,7 @@ on:
       - 'enter-bwrap.sh'
       - 'enter-chroot.sh'
       - 'init.c'
+      - 'share/**'
       - '.github/workflows/custom-daily-release.yml'
   workflow_dispatch:
 
@@ -55,10 +56,30 @@ jobs:
             cp /opt/Utils/utils_dwarfs.tar.gz .
           fi
 
-      - name: Build Conty
+      - name: Build Arch bootstrap
         run: |
           chmod +x create-arch-bootstrap.sh create-conty.sh
           sudo ./create-arch-bootstrap.sh
+
+      - name: Copy custom assets
+        run: |
+          # 确保目标目录存在
+          sudo mkdir -p ./root.x86_64/usr/share/fonts
+          sudo mkdir -p ./root.x86_64/usr/lib/gdk-pixbuf-2.0/2.10.0/loaders/
+
+          # 复制字体
+          if [ -d "./share/fonts" ]; then
+            sudo cp -r ./share/fonts/* ./root.x86_64/usr/share/fonts/
+          fi
+
+          # 复制 libpixbufloader-svg.so
+          if [ -f "./share/lib/libpixbufloader-svg.so" ]; then
+            sudo cp ./share/lib/libpixbufloader-svg.so ./root.x86_64/usr/lib/gdk-pixbuf-2.0/2.10.0/loaders/
+            sudo cp ./share/lib/libpixbufloader-svg.so ./root.x86_64/usr/lib/
+          fi
+
+      - name: Build Conty
+        run: |
           ./create-conty.sh
 
       - name: Prepare release assets
@@ -72,6 +93,10 @@ jobs:
           if [ -f root.x86_64/pkglicenses.txt ]; then
             cp root.x86_64/pkglicenses.txt release/pkg_licenses.txt
           fi
+
+          sudo rm -rf root.x86_64
+          rm -f archlinux-bootstrap-x86_64.tar.zst sha256sums.txt
+          df -h
 
           if [ "$(stat -c%s conty.sh)" -gt 2000000000 ]; then
             split -b 1500M -d -a 2 conty.sh release/conty.sh.part
