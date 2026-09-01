@@ -1,10 +1,12 @@
 # 构建后验证命令
 
-本文档用于验证 Conty 构建产物中的关键组件是否仍然存在并可用。用于新机器、重新构建、同步上游或修改 `settings.sh` / `create-arch-bootstrap.sh` 后快速核对。
+本文档用于验证 Conty 构建产物中的关键组件是否仍然存在并可用。用于重新构建、同步上游或修改 `settings.sh` / `create-arch-bootstrap.sh` 后快速核对。
 
 以下命令默认在包含 `conty.sh` 的目录执行；如果实际文件名是 `archlinux`，把命令中的 `./conty.sh` 替换为 `./archlinux`。
 
 所有直接运行 Conty 的验证命令统一使用 `NVIDIA_HANDLER=0`，避免 NVIDIA 相关逻辑干扰本次检查。
+
+注意：最终 Conty 产物会清理运行时不需要的 pacman 数据，因此不要使用 `pacman -Q` 作为最终镜像验证方法。最终验证应直接检查实际文件、动态库、schema 和可执行程序是否存在。
 
 ## 1. 验证 MonoLisa 字体是否已打包
 
@@ -12,7 +14,7 @@
 NVIDIA_HANDLER=0 ./conty.sh sh -c "find /usr/share/fonts -type f -iname 'MonoLisa*.ttf' | sort"
 ```
 
-正常结果：应列出 `MonoLisa-Regular.ttf`、`MonoLisa-Bold.ttf` 等字体文件。
+正常结果：应列出 `MonoLisa-Regular.ttf`、`MonoLisa-Bold.ttf` 等字体文件，路径应位于 Conty 内的 `/usr/share/fonts/`。
 
 ## 2. 验证中文字体是否存在
 
@@ -30,29 +32,31 @@ NVIDIA_HANDLER=0 ./conty.sh fcitx5 --version
 
 正常结果：应输出 Fcitx5 版本号。
 
-## 4. 验证 Rime 相关软件包是否存在
+## 4. 验证 librime 核心库和 Lua 插件
 
 ```bash
-NVIDIA_HANDLER=0 ./conty.sh pacman -Q fcitx5-rime librime
+NVIDIA_HANDLER=0 ./conty.sh sh -c 'ls -l /usr/lib/librime.so* /usr/lib/rime-plugins/librime-lua.so'
 ```
 
-正常结果：应同时输出 `fcitx5-rime` 和 `librime` 的已安装版本。
+正常结果：应看到 `librime.so`、实际版本库（例如 `librime.so.1.17.0`）以及 `/usr/lib/rime-plugins/librime-lua.so`。
 
-## 5. 验证万象拼音是否已安装
+这说明 librime 核心库与 Lua 插件已经实际打包进入最终 Conty，不依赖 pacman 数据库判断。
+
+## 5. 验证 Fcitx5 Rime 组件
 
 ```bash
-NVIDIA_HANDLER=0 ./conty.sh pacman -Q rime-wanxiang-pinyin
+NVIDIA_HANDLER=0 ./conty.sh sh -c "find /usr/lib/fcitx5 -type f -iname '*rime*.so' -print 2>/dev/null"
 ```
 
-正常结果：应输出 `rime-wanxiang-pinyin` 的已安装版本。
+正常结果：应能找到 Fcitx5 的 Rime 动态组件。
 
-## 6. 验证万象主 schema 是否存在
+## 6. 验证万象拼音主 schema 是否存在
 
 ```bash
 NVIDIA_HANDLER=0 ./conty.sh ls -l /usr/share/rime-data/wanxiang.schema.yaml
 ```
 
-正常结果：应能正常列出 `/usr/share/rime-data/wanxiang.schema.yaml`。
+正常结果：应能正常列出 `/usr/share/rime-data/wanxiang.schema.yaml`。该文件存在即可证明万象拼音数据已经进入最终镜像，不需要使用 `pacman -Q rime-wanxiang-pinyin`。
 
 ## 7. 验证当前万象版本使用的 Lua 组件
 
@@ -60,11 +64,9 @@ NVIDIA_HANDLER=0 ./conty.sh ls -l /usr/share/rime-data/wanxiang.schema.yaml
 NVIDIA_HANDLER=0 ./conty.sh grep -nE 'user_predict|context_reorder' /usr/share/rime-data/wanxiang.schema.yaml
 ```
 
-当前仓库使用的 `rime-wanxiang 17.9.2` 应看到 `wanxiang.context_reorder` 相关内容。
+当前构建所使用的万象版本应以镜像内 schema 的实际内容为准。此前已确认对应版本使用 `wanxiang.context_reorder`；如果用户目录中的 `wanxiang.custom.yaml` 仍引用 `wanxiang.user_predict`，会产生版本不匹配，应先检查用户侧配置，不要误判为 Conty 缺包。
 
-如果用户目录中的 `wanxiang.custom.yaml` 仍引用 `wanxiang.user_predict`，会产生版本不匹配，应先检查用户侧配置，不要误判为 Conty 缺包。
-
-## 8. 验证 librime Lua 插件是否存在
+## 8. 单独验证 librime Lua 插件
 
 ```bash
 NVIDIA_HANDLER=0 ./conty.sh ls -l /usr/lib/rime-plugins/librime-lua.so
@@ -72,11 +74,11 @@ NVIDIA_HANDLER=0 ./conty.sh ls -l /usr/lib/rime-plugins/librime-lua.so
 
 正常结果：应能正常列出 `librime-lua.so`。
 
-注意：该文件原本就会随正常构建进入镜像，不需要额外强制重装 `librime`。
+注意：该文件会随正常依赖进入镜像，不需要在 `create-arch-bootstrap.sh` 中额外强制重装 `librime`，也不需要额外增加强制文件检查。
 
 ## 9. 验证 Rime / Lua 插件实际能加载
 
-先关闭当前正在运行的 Fcitx5，再前台启动 Conty 内的 Fcitx5：
+先关闭当前正在运行的 Fcitx5，再启动 Conty 内的 Fcitx5：
 
 ```bash
 pkill -x fcitx5
@@ -109,19 +111,22 @@ NVIDIA_HANDLER=0 ./conty.sh grep -A2 '^\[archlinuxcn\]' /etc/pacman.conf
 ```bash
 NVIDIA_HANDLER=0 ./conty.sh sh -c "\
 set -e; \
-test -f /usr/share/rime-data/wanxiang.schema.yaml; \
+command -v fcitx5 >/dev/null; \
+test -e /usr/lib/librime.so; \
 test -f /usr/lib/rime-plugins/librime-lua.so; \
+test -f /usr/share/rime-data/wanxiang.schema.yaml; \
 test -f /usr/lib/libpixbufloader-svg.so; \
+test -f /usr/lib/gdk-pixbuf-2.0/2.10.0/loaders/libpixbufloader-svg.so; \
 find /usr/share/fonts -type f -iname 'MonoLisa-Regular.ttf' | grep -q .; \
-pacman -Q fcitx5-rime librime rime-wanxiang-pinyin; \
 echo '关键组件检查通过'"
 ```
 
-出现 `关键组件检查通过`，说明字体、Rime、万象拼音、Lua 插件和自定义 Pixbuf loader 这些关键项目都已存在。
+出现 `关键组件检查通过`，说明 MonoLisa、Fcitx5、librime、librime-lua、万象拼音 schema 和自定义 Pixbuf loader 等关键项目都实际存在于最终 Conty 中。
 
 ## 验证原则
 
-- 优先验证构建产物内部是否存在，不凭配置文件推测。
+- 优先验证最终构建产物内部的实际文件，不凭软件包配置推测。
+- 最终 Conty 不使用 `pacman -Q` 作为验证依据，因为 pacman 数据库可能已经被构建流程清理。
 - Fcitx5 自带 Pinyin 正常、万象异常时，优先检查用户侧 Rime 配置版本是否与镜像内万象版本一致。
 - 不因为单个用户配置错误去修改已经验证正常的 Conty 构建基线。
 - 修改中文输入、字体、Rime、万象、GTK/GDK 或软件包列表后，至少重新执行本文对应项目的验证命令。
