@@ -2,7 +2,7 @@ name: Custom Daily Release
 
 on:
   schedule:
-    # 每天北京时间 00:00（UTC 16:00）自动构建。
+    # 每天北京时间 00:00（UTC 16:00）自动构建并更新 latest。
     - cron: '0 16 * * *'
   push:
     branches:
