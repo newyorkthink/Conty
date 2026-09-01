@@ -21,6 +21,8 @@
 
 现已将 Chaotic-AUR bootstrap 改为：优先使用官方 `geo-mirror`，失败后依次回退到官方 CDN 和多个美国官方镜像；每个镜像带重试。两个 bootstrap 包先下载到本地，再由 chroot 内的 pacman 安装，避免 pacman 重新锁定单一 CDN URL。仅当所有配置镜像都失败时才终止构建。
 
+该修改只改变 Chaotic-AUR 的 `chaotic-keyring.pkg.tar.zst` 和 `chaotic-mirrorlist.pkg.tar.zst` 从哪个镜像地址下载，不会删除或替换 `settings.sh` 中的中文环境、Fcitx5、Rime、万象拼音或中文字体包；Conty 仍保持 Arch Linux 中文输入环境和 `rime-wanxiang-pinyin` 配置。
+
 ## 踩过的坑
 
 ### Fcitx5 + Rime 万象拼音无候选框
