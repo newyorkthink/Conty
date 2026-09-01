@@ -4,4 +4,4 @@ skip = .git*,.codespellrc
 check-hidden = true
 # Ignore lines with codespell-ignore
 ignore-regex = .*codespell-ignore.*|\.fo\b
-# ignore-words-list =
+ignore-words-list = rime
