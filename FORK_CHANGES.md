@@ -19,6 +19,8 @@
 
 相对上游增加了本 fork 所需的 Arch Linux CN 仓库配置，并加入 GTK/GDK 兼容处理，用于把相关 immodules / pixbuf loader 放到 Conty 运行时可直接找到的位置。
 
+Chaotic-AUR bootstrap 不再把 keyring/mirrorlist 下载锁死到单个 `cdn-mirror.chaotic.cx`；现在先使用官方 `geo-mirror`，失败后自动回退到官方 CDN 和多个官方美国镜像，并带下载重试，再从本地包安装。
+
 此前曾临时加入“强制重装 `librime` 并检查 `librime-lua.so`”逻辑，现已撤销。旧版镜像实测本来就包含 `librime-lua.so`，该逻辑不是必要修复。
 
 ## 软件包配置

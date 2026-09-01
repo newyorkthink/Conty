@@ -15,6 +15,12 @@
 
 原因：使用未加入该修复的旧版 `archlinux` 实际验证，`/usr/lib/rime-plugins/librime-lua.so` 本来就存在，而且在修正万象配置后可以正常中文输入。因此这次故障并不是 Conty 缺少 `librime-lua.so`，不需要额外重装 `librime` 或增加该文件的构建检查。
 
+### 2026-09-01：Chaotic-AUR bootstrap 增加官方多镜像回退
+
+连续两次手动运行 Custom Daily Release 都在 `Build Arch bootstrap` 阶段失败，错误为 `cdn-mirror.chaotic.cx` 返回 HTTP 503。此前成功的 push 构建与手动构建执行的是同一套 workflow 和 bootstrap 逻辑；已观察到成功构建运行在 `northcentralus`，失败的手动构建运行在 `westus2`，说明问题不在 `workflow_dispatch` 分支，而在 bootstrap 把 Chaotic-AUR keyring/mirrorlist 下载锁死到单一 CDN 端点。
+
+现已将 Chaotic-AUR bootstrap 改为：优先使用官方 `geo-mirror`，失败后依次回退到官方 CDN 和多个美国官方镜像；每个镜像带重试。两个 bootstrap 包先下载到本地，再由 chroot 内的 pacman 安装，避免 pacman 重新锁定单一 CDN URL。仅当所有配置镜像都失败时才终止构建。
+
 ## 踩过的坑
 
 ### Fcitx5 + Rime 万象拼音无候选框
