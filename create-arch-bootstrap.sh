@@ -270,7 +270,7 @@ if ! run_in_chroot pacman --noconfirm -S librime; then
 	exit 1
 fi
 
-# Wanxiang depends on librime-lua; fail the build instead of shipping a broken Rime setup.
+# Wanxiang depends on librime-lua; fail the build instead of shipping a broken input-method setup.
 if [ ! -f "${bootstrap}/usr/lib/rime-plugins/librime-lua.so" ]; then
 	echo "ERROR: librime-lua.so is missing after reinstalling librime"
 	unmount_chroot
