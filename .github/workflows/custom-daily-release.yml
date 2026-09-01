@@ -1,0 +1,123 @@
+name: Custom Daily Release
+
+on:
+  schedule:
+    # 每天北京时间 00:00（UTC 16:00）自动构建。
+    - cron: '0 16 * * *'
+  push:
+    branches:
+      - master
+    paths:
+      - 'settings.sh'
+      - 'create-arch-bootstrap.sh'
+      - 'create-conty.sh'
+      - 'create-utils.sh'
+      - 'conty-start.sh'
+      - 'enter-bwrap.sh'
+      - 'enter-chroot.sh'
+      - 'init.c'
+      - '.github/workflows/custom-daily-release.yml'
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: custom-daily-release
+  cancel-in-progress: true
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: false
+
+      - name: Download latest utils artifact when available
+        uses: dawidd6/action-download-artifact@v6
+        with:
+          workflow: utils.yml
+          workflow_conclusion: success
+          if_no_artifact_found: ignore
+          path: /opt
+
+      - name: Prepare utils
+        run: |
+          if [ -f /opt/Utils/utils.tar.gz ]; then
+            cp /opt/Utils/utils.tar.gz .
+          fi
+
+          if [ -f /opt/Utils/utils_dwarfs.tar.gz ]; then
+            cp /opt/Utils/utils_dwarfs.tar.gz .
+          fi
+
+      - name: Build Conty
+        run: |
+          chmod +x create-arch-bootstrap.sh create-conty.sh
+          sudo ./create-arch-bootstrap.sh
+          ./create-conty.sh
+
+      - name: Prepare release assets
+        run: |
+          mkdir -p release
+
+          if [ -f root.x86_64/pkglist.x86_64.txt ]; then
+            cp root.x86_64/pkglist.x86_64.txt release/pkg_list.txt
+          fi
+
+          if [ -f root.x86_64/pkglicenses.txt ]; then
+            cp root.x86_64/pkglicenses.txt release/pkg_licenses.txt
+          fi
+
+          if [ "$(stat -c%s conty.sh)" -gt 2000000000 ]; then
+            split -b 1500M -d -a 2 conty.sh release/conty.sh.part
+          else
+            mv conty.sh release/conty.sh
+          fi
+
+          (
+            cd release
+            sha256sum * > SHA256SUMS
+          )
+
+          if compgen -G 'release/conty.sh.part*' > /dev/null; then
+            cat > release-body.md <<'EOF'
+          本 Release 是 `newyorkthink/Conty` 的最新自动构建。
+
+          由于 `conty.sh` 超过 GitHub Release 单文件大小限制，已分卷上传。
+          下载全部 `conty.sh.part*` 文件后，在同一目录执行：
+
+          ```bash
+          cat conty.sh.part* > conty.sh
+          chmod +x conty.sh
+          ```
+
+          `SHA256SUMS` 用于校验 Release 资产。
+          EOF
+          else
+            cat > release-body.md <<'EOF'
+          本 Release 是 `newyorkthink/Conty` 的最新自动构建。
+
+          下载 `conty.sh` 后赋予执行权限即可使用：
+
+          ```bash
+          chmod +x conty.sh
+          ```
+
+          `SHA256SUMS` 用于校验 Release 资产。
+          EOF
+          fi
+
+      - name: Publish latest release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete latest --cleanup-tag --yes || true
+          gh release create latest release/* \
+            --title 'Latest build' \
+            --notes-file release-body.md \
+            --latest
