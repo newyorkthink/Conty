@@ -194,11 +194,39 @@ run_in_chroot pacman-key --init
 run_in_chroot pacman-key --populate archlinux
 
 # Add Chaotic-AUR repo
+chaotic_keyring_pkg="${bootstrap}/tmp/chaotic-keyring.pkg.tar.zst"
+chaotic_mirrorlist_pkg="${bootstrap}/tmp/chaotic-mirrorlist.pkg.tar.zst"
+chaotic_mirrors=(
+	'https://geo-mirror.chaotic.cx/chaotic-aur'
+	'https://cdn-mirror.chaotic.cx/chaotic-aur'
+	'https://us-mi-mirror.chaotic.cx/chaotic-aur'
+	'https://us-tx-mirror.chaotic.cx/chaotic-aur'
+	'https://us-ut-mirror.chaotic.cx/chaotic-aur'
+)
+
+chaotic_bootstrap_ok=
+for mirror in "${chaotic_mirrors[@]}"; do
+	echo "Downloading Chaotic-AUR bootstrap packages from ${mirror}"
+	rm -f "${chaotic_keyring_pkg}" "${chaotic_mirrorlist_pkg}"
+	if curl "${proxy[@]}" -fL --retry 3 --retry-delay 2 --retry-connrefused \
+		-o "${chaotic_keyring_pkg}" "${mirror}/chaotic-keyring.pkg.tar.zst" && \
+		curl "${proxy[@]}" -fL --retry 3 --retry-delay 2 --retry-connrefused \
+		-o "${chaotic_mirrorlist_pkg}" "${mirror}/chaotic-mirrorlist.pkg.tar.zst"; then
+		chaotic_bootstrap_ok=1
+		break
+	fi
+	done
+
+if [ -z "${chaotic_bootstrap_ok}" ]; then
+	echo "Failed to download Chaotic-AUR keyring and mirrorlist from all configured mirrors"
+	unmount_chroot
+	exit 1
+fi
+
 if ! run_in_chroot pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com; then
 	chaotic_keyring_extract_dir="${bootstrap}/tmp/chaotic-keyring"
 	mkdir -p "${chaotic_keyring_extract_dir}"
-	curl -L --retry 3 -o "${chaotic_keyring_extract_dir}/chaotic-keyring.pkg.tar.zst" "https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst"
-	tar -xf "${chaotic_keyring_extract_dir}/chaotic-keyring.pkg.tar.zst" -C "${chaotic_keyring_extract_dir}"
+	tar -xf "${chaotic_keyring_pkg}" -C "${chaotic_keyring_extract_dir}"
 	run_in_chroot pacman-key --add /tmp/chaotic-keyring/usr/share/pacman/keyrings/chaotic.gpg
 	rm -rf "${chaotic_keyring_extract_dir}"
 fi
@@ -206,12 +234,14 @@ fi
 run_in_chroot pacman-key --lsign-key 3056513887B78AEB
 
 if ! run_in_chroot pacman --noconfirm -U \
-	 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' \
-	 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'; then
-	echo "Seems like Chaotic-AUR keyring or mirrorlist is currently unavailable"
-	echo "Please try again later"
+	/tmp/chaotic-keyring.pkg.tar.zst \
+	/tmp/chaotic-mirrorlist.pkg.tar.zst; then
+	echo "Failed to install Chaotic-AUR keyring or mirrorlist"
+	unmount_chroot
 	exit 1
 fi
+
+rm -f "${chaotic_keyring_pkg}" "${chaotic_mirrorlist_pkg}"
 
 {
 	echo
