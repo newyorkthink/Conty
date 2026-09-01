@@ -264,19 +264,6 @@ if ! run_in_chroot bash -c install_packages; then
 	exit 1
 fi
 
-# Reinstall librime so all runtime plugins are unpacked into the image.
-if ! run_in_chroot pacman --noconfirm -S librime; then
-	unmount_chroot
-	exit 1
-fi
-
-# Wanxiang depends on librime-lua; fail the build instead of shipping a broken input-method setup.
-if [ ! -f "${bootstrap}/usr/lib/rime-plugins/librime-lua.so" ]; then
-	echo "ERROR: librime-lua.so is missing after reinstalling librime"
-	unmount_chroot
-	exit 1
-fi
-
 if [ "${#AUR_PACKAGES[@]}" -ne 0 ]; then
 	run_in_chroot pacman --noconfirm --needed -S base-devel paru
 	run_in_chroot useradd -m -G wheel aur
