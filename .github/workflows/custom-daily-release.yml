@@ -24,10 +24,6 @@ permissions:
   actions: read
   contents: write
 
-concurrency:
-  group: custom-daily-release
-  cancel-in-progress: true
-
 jobs:
   build-and-release:
     runs-on: ubuntu-22.04
