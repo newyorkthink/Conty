@@ -52,7 +52,7 @@
 当前触发方式：
 
 - 定时：每天北京时间 00:00，即 UTC 16:00。
-- Push：关键构建文件、`share/**` 或该 workflow 本身变化时触发。
+- Push：每次向 `master` 推送提交时触发，不按修改文件路径筛选。
 - 手动：支持 `workflow_dispatch`。
 
 当前**没有 `concurrency` 并发锁**。自动触发、Push 触发和手动触发的多个 `Custom Daily Release` 可以并行运行，不应因为同一 concurrency group 进入 `Waiting`。

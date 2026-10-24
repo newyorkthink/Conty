@@ -7,17 +7,6 @@ on:
   push:
     branches:
       - master
-    paths:
-      - 'settings.sh'
-      - 'create-arch-bootstrap.sh'
-      - 'create-conty.sh'
-      - 'create-utils.sh'
-      - 'conty-start.sh'
-      - 'enter-bwrap.sh'
-      - 'enter-chroot.sh'
-      - 'init.c'
-      - 'share/**'
-      - '.github/workflows/custom-daily-release.yml'
   workflow_dispatch:
 
 permissions:
