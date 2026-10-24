@@ -310,6 +310,8 @@ if [ "${#AUR_PACKAGES[@]}" -ne 0 ]; then
 	rm -rf "${bootstrap}"/home/aur
 fi
 
+run_in_chroot pacman -Rdd linux mkinitcpio mkinitcpio-busybox
+
 run_in_chroot locale-gen
 
 echo "Generating package info, please wait..."
