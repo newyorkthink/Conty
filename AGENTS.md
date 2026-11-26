@@ -55,6 +55,7 @@
 以下内容是本 Fork 已明确保留的自定义层，后续同步上游时不得机械覆盖：
 
 - `settings.sh` 的软件包选择、分类和相关说明属于本 Fork 的自定义配置；不得直接用上游默认 `settings.sh` 整文件覆盖。
+- 增删 `settings.sh` 软件包前，必须先核对 `docs/package-policy.md` 中的黑名单、已剔除记录与必留保护清单；后续本 Fork 自维护文档统一放入 `docs/` 目录，不耦合上游构建脚本。
 - `USE_DWARFS=1` 是当前明确启用的构建配置，除非用户明确要求，否则不得改回上游默认值。
 - `create-arch-bootstrap.sh` 中额外的软件仓库配置及 GTK/GDK 兼容处理属于本 Fork 的构建兼容逻辑；上游没有相同代码不代表可以直接删除。
 - `/.github/workflows/custom-daily-release.yml` 负责本 Fork 的每日构建、自定义资产注入、构建后空间清理、分卷和固定 `latest` Release。

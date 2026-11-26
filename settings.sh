@@ -1,11 +1,6 @@
 # shellcheck shell=bash disable=2034
 
-:<< "NOTE"
-1. dolphin 不能加：无法启动。
-2. kdeconnect 不能加：无法启动。
-3. PipeWire 不适合加入：可能与 PulseAudio 冲突；且需要后台常驻运行，但 Conty 环境无法启动 systemd/系统服务。
-4. EasyEffects / lsp-plugins 会生成大量无用桌面图标，导致 nwg-drawer 里出现一堆杂项图标。
-NOTE
+# 软件包黑名单、必留保护清单与增删核对原则见 docs/package-policy.md。
 
 # Packages to install
 # You can add packages that you want and remove packages that you don't need
@@ -20,7 +15,7 @@ PACKAGES=(
 	# udisks2_tools
 	udiskie udisks2 udisks2-btrfs udisks2-lvm2
 	# terminal_emulators
-	lxterminal rxvt-unicode xterm
+	lxterminal xterm
 	# text_editors
 	vim mousepad
 	# pdf_utilities
@@ -37,8 +32,7 @@ PACKAGES=(
 	# input_method_frameworks
 	fcitx5 fcitx5-anthy fcitx5-bamboo fcitx5-breeze fcitx5-chewing fcitx5-chinese-addons fcitx5-configtool fcitx5-gtk fcitx5-hangul fcitx5-kkc fcitx5-libthai fcitx5-lua
 	fcitx5-m17n fcitx5-material-color fcitx5-nord fcitx5-pinyin-zhwiki fcitx5-qt fcitx5-rime fcitx5-sayura fcitx5-skk fcitx5-table-extra fcitx5-table-other fcitx5-unikey libime
-	ibus ibus-anthy ibus-chewing ibus-hangul ibus-kkc ibus-libpinyin ibus-rime ibus-skk ibus-sunpinyin ibus-table ibus-table-chinese ibus-table-extraphrase ibus-typing-booster
-	ibus-unikey rime-bopomofo rime-cangjie rime-double-pinyin rime-emoji rime-essay rime-loengfan rime-luna-pinyin rime-pinyin-simp rime-pinyin-zhwiki rime-prelude rime-quick
+	ibus rime-bopomofo rime-cangjie rime-double-pinyin rime-emoji rime-essay rime-loengfan rime-luna-pinyin rime-pinyin-simp rime-pinyin-zhwiki rime-prelude rime-quick
 	rime-stroke rime-terra-pinyin rime-wubi rime-wugniu rime-wanxiang-pinyin
 	# fonts_management_tools
 	fontconfig gnome-font-viewer freetype2
@@ -47,15 +41,15 @@ PACKAGES=(
 	# desktop_themes
 	sound-theme-freedesktop gnome-themes-extra hicolor-icon-theme papirus-icon-theme adwaita-icon-theme adwaita-cursors materia-gtk-theme kvantum-theme-materia
 	# spellcheck_tools
-	enchant aspell hspell hunspell gspell codespell nuspell
+	enchant aspell hunspell gspell codespell nuspell
 	# wayland_packages
 	wayland wayland-protocols wayland-utils xdg-desktop-portal xdg-desktop-portal-gtk
 	# xorg_packages
-	xorg-server xorg-server-common xorg-server-devel xorg-xinit xorg-xinput xorg-xwayland xorg-server-xephyr xorg-xrandr xorg-xset xorg-xprop xorg-font-util xorg-xkbcomp
+	xorg-server xorg-server-common xorg-xinit xorg-xinput xorg-xwayland xorg-server-xephyr xorg-xrandr xorg-xset xorg-xprop xorg-font-util xorg-xkbcomp
 	# x11_core_libraries
 	libx11 libxslt libxext libxau libxdmcp libxkbcommon libxkbcommon-x11 libxcb libxi libxrandr libxinerama libxcomposite libsm libxrender libxfixes libxdamage libxft libxtst libxv
 	# multimedia_tools
-	mpv ffmpeg audacity feh nsxiv imagemagick gpicview v4l-utils gst-plugins-espeak
+	mpv ffmpeg feh nsxiv imagemagick gpicview v4l-utils gst-plugins-espeak
 	gstreamer gst-plugins-base gst-plugins-base-libs gst-plugins-good gst-plugins-bad gst-plugins-bad-libs gst-plugins-ugly gst-libav
 	# file_manager_tools
 	libfm-qt tumbler ffmpegthumbnailer libgepub libgsf libopenraw poppler poppler-glib nautilus nautilus-image-converter nautilus-python nautilus-share
@@ -64,23 +58,21 @@ PACKAGES=(
 	# dbus_packages
 	dbus dbus-units dbus-glib xdg-dbus-proxy python-dbus
 	# python_dev_tools
-	python python-pip python-setuptools python-wheel python-virtualenv ipython cython
+	python python-pip python-setuptools python-wheel python-virtualenv
 	# bluetooth_management_packages
 	bluez bluez-cups bluez-hid2hci bluez-libs bluez-mesh bluez-obex bluez-tools bluez-utils blueman
 	# gtk_packages
 	gtk3 gtk4 webkit2gtk-4.1 glib2
 	# gnome_environment_tools
 	gnome-tweaks gnome-control-center gnome-system-monitor gnome-disk-utility baobab gnome-settings-daemon gnome-characters gnome-logs
-	# openbox_environment
-	openbox lxappearance libnotify libxft libvoikko at-spi2-core
-	# haskell_libraries
-	haskell-bzlib haskell-graphscc haskell-pandoc-lua-engine haskell-pandoc-lua-marshal haskell-alsa-core haskell-alsa-mixer
+	# desktop_support_libraries
+	lxappearance libnotify at-spi2-core
 	# graphics_drivers
 	mesa xf86-video-intel xf86-video-amdgpu xf86-video-vesa intel-media-driver libdrm libglvnd libepoxy
 	# vulkan_tools
-	vulkan-radeon vulkan-intel vulkan-icd-loader vulkan-mesa-layers vulkan-tools mangohud libvpl libvpl-tools openpgl
+	vulkan-radeon vulkan-intel vulkan-icd-loader vulkan-mesa-layers vulkan-tools libvpl libvpl-tools
 	# utility_software_packages
-	dconf dconf-editor hplip meld psensor speedcrunch qalculate-gtk kcolorchooser bleachbit peek shutter filezilla
+	dconf dconf-editor meld psensor speedcrunch qalculate-gtk kcolorchooser bleachbit peek filezilla
 	# video_acceleration
 	libva libva-intel-driver vdpauinfo libvdpau libvdpau-va-gl
 	# debugging_tools
@@ -97,16 +89,16 @@ PACKAGES=(
 	# audio_drivers_libraries
 	libldac sbc libfreeaptx openal libsndfile libsamplerate libcanberra libsoxr libasyncns libvorbis
 	# network_management_tools
-	net-tools traceroute iperf libnm dhclient wireless_tools wpa_supplicant iw iwd nethogs iftop hostapd bridge-utils ethtool dnsmasq inetutils netctl dhcpcd
+	net-tools traceroute iperf libnm wireless_tools wpa_supplicant iw iwd nethogs iftop bridge-utils ethtool dnsmasq inetutils
 	# security_tools
-	openssh openssl lxqt-openssh-askpass openvpn iptables squid gnutls libldap qrencode haveged nmap tcpdump
+	openssh openssl lxqt-openssh-askpass openvpn iptables gnutls libldap qrencode nmap tcpdump
 	# file_system_tools
 	attr cryptsetup smartmontools parted gparted lvm2 fsarchiver gsmartcontrol ntfs-3g exfatprogs jfsutils util-linux dosfstools e2fsprogs
 	btrfs-progs xfsprogs cifs-utils mdadm
 	# network_file_systems
-	samba nfs-utils mkinitcpio-nfs-utils avahi sshfs
+	samba nfs-utils avahi sshfs
 	# cli_utilities
-	tmux screen bat bat-extras ripgrep fzf lsd shellcheck mcfly fd ncdu inxi jq lf tree which cmatrix usbutils pciutils less findutils psmisc procps-ng expect zoxide
+	tmux screen bat bat-extras ripgrep fzf lsd shellcheck mcfly fd ncdu inxi jq lf tree which usbutils pciutils less findutils psmisc procps-ng expect zoxide
 	# desktop_utilities
 	desktop-file-utils xdotool arandr xclip xsel xbindkeys numlockx zenity xdg-utils xdg-user-dirs dmenu rofi nwg-drawer dunst
 	# base_utilities
